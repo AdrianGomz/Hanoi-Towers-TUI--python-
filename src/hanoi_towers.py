@@ -11,7 +11,6 @@ def generate_moves_list(n):
             target.append(origin.pop())
             save.append((rod_1.copy(), rod_2.copy(), rod_3.copy()))
             make_moves(n-1, auxiliar, origin, target)
-        return save
 
     rod_1, rod_2, rod_3 = [i for i in range(n, 0, -1)], [], []
     save = [(rod_1.copy(), rod_2.copy(), rod_3.copy())]
