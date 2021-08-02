@@ -7,6 +7,7 @@ from rich.columns import Columns
 
 from src.panel_layout import PanelLayout
 from src.hanoi_towers import generate_moves_list
+from src.initialscreen import InitialScreen
 
 
 def generate_rods_disks_list(n, disks_list):
@@ -33,17 +34,30 @@ def generate_rods_string(n, disk_list):
     return rods_string
 
 
-def main():
-    layout = PanelLayout.make_layout()
-    layout['footer'].update(Panel('footer', title='footer'))
+def initial_screen():
+    initial_screen = InitialScreen()
+    initial_layout = PanelLayout.make_layout(True)
+    initial_layout.update(initial_screen.display_initial_screen())
+    with Live(initial_layout, refresh_per_second=4, screen=True):
+        while initial_screen.in_initial_screen:
+            initial_screen.key_input()
+            print(initial_screen.in_initial_screen)
+            initial_layout.update(initial_screen.display_initial_screen())
 
+
+def main():
+    layout = PanelLayout.make_layout(False)
     moves_list = generate_moves_list(4)
+    layout = PanelLayout.make_layout(False)
+    layout['footer'].update(Panel('footer', title='footer'))
     rod_1 = generate_rods_string(4, moves_list[0][0])
     rod_2 = generate_rods_string(4, moves_list[0][1])
     rod_3 = generate_rods_string(4, moves_list[0][2])
     layout['main'].update(
         Panel(Columns([rod_1, rod_2, rod_3]), title="main"))
+    initial_screen()
     with Live(layout, refresh_per_second=4, screen=True):
+
         for move in moves_list:
             rod_1 = generate_rods_string(4, move[0])
             rod_2 = generate_rods_string(4, move[1])
